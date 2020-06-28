@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<meta name="author" content="Phil Bartie">
+<head>
+<title>Location Coordinates</title>
+</head>
+
+<body>
+
+<h1>Location Details</h1>
+
+
+You will need to enable location permissions on first use.<br><br>
+On <b>Android / Chrome </b> you should get a pop-up message >  agree to allow location to be accessed.
+<br>
+On <b>Safari on iPhones</b> > go to Settings > Privacy > Location services > Safari websites  >  tick While using App.
+<br><br>
+The GNSS (e.g. GPS,GLONASS) values are updated every 5 seconds. The page age is shown by dots in the Last Update field.
+<br>Ideally take readings while stationary and wait until the lines of dots has been cleared, for the most up-to-date location details.
+<br>
+For desktops, laptops, ipads without GNSS the location reported will be based on WiFi or IP address, which is not as accurate as GNSS.
+<br>IP based positioning can put you in the wrong country (eg actually in Edinburgh but connecting to the internet via a London registered ISP could place you in London, England).
+
+<br><br><br>
+
+<form id="dataform">
+latitude: <input name="lat" value="waiting..."><br>
+longitude: <input name="lng" value="waiting..."><br>
+accuracy: <input  name="acc" value="waiting..."><br>
+heading: <input name="hdg"  value="waiting..."><br><br>
+last update: <input name="age"  value="."><br>
+<input id ="usrinput" name="usr_id" value="user1" type="hidden">
+</form>
+
+
+<br><br><br>
+You need to keep a record of the Latitude and the Longitude values; take note of 5+ decimal places.
+
+<script>
+age='.';
+
+
+setInterval(function(){
+    getCount();
+   },1000);
+
+</script>
+
+<script>
+
+function getCount() {
+
+age=age+'.'
+dataform.age.value = age;
+
+if (age =='.....'){
+getLocation();
+age='';
+
+};
+
+}
+
+
+var geo_options = {
+  enableHighAccuracy: true,
+  maximumAge        : 160000,
+  timeout           : 157000
+};
+
+function getLocation() {
+
+    if (navigator.geolocation) {
+       var watchID =  navigator.geolocation.watchPosition(geo_success,geo_error,geo_options);
+        ;
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+function geo_error() {
+
+}
+
+function geo_success(position) {
+dataform.lat.value = position.coords.latitude;
+dataform.lng.value = position.coords.longitude;
+dataform.acc.value = position.coords.accuracy;
+
+if (position.coords.heading == null)
+{
+dataform.hdg.value = -999;
+}
+else{
+dataform.hdg.value=position.coords.heading ;
+}
+}
+</script>
+
+<script>
+getLocation();
+</script>
+
+</body>
+</html>
